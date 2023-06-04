@@ -42,6 +42,9 @@ def copy_tag_file(tag_path, compiled_tags_path):
         with open(compiled_tags_path, 'w') as compiled:
             compiled.write(original.read())
 
+def is_tag_file(entry):
+    return entry.lower().endswith('.txt') or entry.lower().endswith('.zip')
+
 def resize_and_copy_images(project_to_compile, project_directories):
     compiled_path = "./Compiled/"
 
@@ -53,25 +56,39 @@ def resize_and_copy_images(project_to_compile, project_directories):
             os.makedirs(tags_path)
 
         for entry in os.listdir(dir_path):
+            file_path = os.path.join(dir_path, entry)
+
             if entry.lower().endswith('.png'):
-                old_file_path = os.path.join(dir_path, entry)
-                new_file_name = f"{directory}_{entry}"
-                new_file_path = os.path.join(compiled_path, new_file_name)
+                image = Image.open(file_path)
 
-                image = Image.open(old_file_path)
-                resized_image = image.resize((256, 256), resample=Image.NEAREST)
-                resized_image = remove_transparency(resized_image)
-                resized_image.save(new_file_path)
+                if image.size == (16, 16):
+                    new_file_name = f"{directory}_{entry}"
+                    new_file_path = os.path.join(compiled_path, new_file_name)
 
-                tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
-                tag_file_path = os.path.join(tags_path, tag_file_name)
-                compiled_tags_file_name = f"{directory}_{tag_file_name}"
-                compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
+                    resized_image = image.resize((256, 256), resample=Image.NEAREST)
+                    resized_image = remove_transparency(resized_image)
+                    resized_image.save(new_file_path)
 
-                if not os.path.exists(tag_file_path):
-                    create_tag_file(tag_file_path, os.path.splitext(entry)[0])
+                    tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
+                    tag_file_path = os.path.join(tags_path, tag_file_name)
+                    compiled_tags_file_name = f"{directory}_{tag_file_name}"
+                    compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
 
-                copy_tag_file(tag_file_path, compiled_tags_file_path)
+                    if not os.path.exists(tag_file_path):
+                        create_tag_file(tag_file_path, os.path.splitext(entry)[0])
+
+                    copy_tag_file(tag_file_path, compiled_tags_file_path)
+                elif not is_tag_file(entry):
+                    try:
+                        os.remove(file_path)
+                    except:
+                        pass
+
+            elif not is_tag_file(entry):
+                try:
+                    os.remove(file_path)
+                except:
+                    pass
 
 def main():
     projects = list_projects()
