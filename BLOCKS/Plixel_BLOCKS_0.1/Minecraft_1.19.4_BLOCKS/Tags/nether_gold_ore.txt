@@ -1,0 +1,1 @@
+nether_gold_ore

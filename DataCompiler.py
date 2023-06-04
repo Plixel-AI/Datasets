@@ -33,12 +33,24 @@ def remove_transparency(img):
     else:
         return img
 
+def create_tag_file(tag_path, default_tag):
+    with open(tag_path, 'w') as f:
+        f.write(default_tag)
+
+def copy_tag_file(tag_path, compiled_tags_path):
+    with open(tag_path, 'r') as original:
+        with open(compiled_tags_path, 'w') as compiled:
+            compiled.write(original.read())
 
 def resize_and_copy_images(project_to_compile, project_directories):
     compiled_path = "./Compiled/"
 
     for directory in project_directories:
         dir_path = os.path.join(project_to_compile, directory)
+        tags_path = os.path.join(dir_path, 'Tags')
+
+        if not os.path.exists(tags_path):
+            os.makedirs(tags_path)
 
         for entry in os.listdir(dir_path):
             if entry.lower().endswith('.png'):
@@ -51,12 +63,15 @@ def resize_and_copy_images(project_to_compile, project_directories):
                 resized_image = remove_transparency(resized_image)
                 resized_image.save(new_file_path)
 
+                tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
+                tag_file_path = os.path.join(tags_path, tag_file_name)
+                compiled_tags_file_name = f"{directory}_{tag_file_name}"
+                compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
 
+                if not os.path.exists(tag_file_path):
+                    create_tag_file(tag_file_path, os.path.splitext(entry)[0])
 
-
-
-
-
+                copy_tag_file(tag_file_path, compiled_tags_file_path)
 
 def main():
     projects = list_projects()
