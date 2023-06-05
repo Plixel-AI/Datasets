@@ -1,6 +1,9 @@
 import os
 from PIL import Image
 
+#Defualt = 256
+Size=256
+
 def list_projects():
     blocks_path = 'BLOCKS'
     items_path = 'ITEMS'
@@ -65,7 +68,7 @@ def resize_and_copy_images(project_to_compile, project_directories):
                     new_file_name = f"{directory}_{entry}"
                     new_file_path = os.path.join(compiled_path, new_file_name)
 
-                    resized_image = image.resize((256, 256), resample=Image.NEAREST)
+                    resized_image = image.resize((Size, Size), resample=Image.NEAREST)
                     resized_image = remove_transparency(resized_image)
                     resized_image.save(new_file_path)
 

@@ -1,1 +1,0 @@
-rune_altar_can_craft
