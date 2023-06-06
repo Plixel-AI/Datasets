@@ -1,1 +1,0 @@
-rabbit_foot_charm
