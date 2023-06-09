@@ -2,6 +2,7 @@ import os
 import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageTk
+from collections import deque
 
 def list_directories():
     dirs = []
@@ -23,7 +24,7 @@ def get_tag_content(tag_file_path):
     with open(tag_file_path, 'r') as file:
         return file.read()
 
-def display_image_and_form(image_path, tag_file_path, remaining_count, display_next_func):
+def display_image_and_form(image_path, tag_file_path, remaining_count):
     root = tk.Tk()
 
     with Image.open(image_path) as img:
@@ -53,14 +54,12 @@ def display_image_and_form(image_path, tag_file_path, remaining_count, display_n
             file.write(new_content)
 
         root.destroy()
-        display_next_func()
 
     save_button = tk.Button(root, text='Save', command=save_new_content)
     save_button.pack()
 
     def skip():
         root.destroy()
-        display_next_func()
 
     skip_button = tk.Button(root, text='Skip', command=skip)
     skip_button.pack()
@@ -70,7 +69,6 @@ def display_image_and_form(image_path, tag_file_path, remaining_count, display_n
         if answer:
             os.remove(image_path)
             root.destroy()
-            display_next_func()
 
     remove_button = tk.Button(root, text='Remove', command=remove_image)
     remove_button.pack()
@@ -86,16 +84,12 @@ def main():
     chosen_index = int(input('Choose a directory by entering the number: '))
     chosen_dir = dirs[chosen_index - 1]
 
-    image_tag_pairs = find_all_images_and_tag_files(chosen_dir)
+    image_tag_pairs = deque(find_all_images_and_tag_files(chosen_dir))
 
-    def display_image_pairs_iterator(image_pairs):
-        if not image_pairs:
-            return
-        image_path, tag_file_path = image_pairs.pop(0)
-        remaining_count = len(image_pairs)
-        display_image_and_form(image_path, tag_file_path, remaining_count, lambda: display_image_pairs_iterator(image_pairs))
-
-    display_image_pairs_iterator(image_tag_pairs)
+    while image_tag_pairs:
+        image_path, tag_file_path = image_tag_pairs.popleft()
+        remaining_count = len(image_tag_pairs)
+        display_image_and_form(image_path, tag_file_path, remaining_count)
 
 if __name__ == '__main__':
     main()

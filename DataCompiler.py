@@ -38,7 +38,7 @@ def remove_transparency(img):
 
 def create_tag_file(tag_path, default_tag):
     with open(tag_path, 'w') as f:
-        f.write(default_tag)
+        f.write(default_tag.replace("_", " "))
 
 def copy_tag_file(tag_path, compiled_tags_path):
     with open(tag_path, 'r') as original:
@@ -62,31 +62,33 @@ def resize_and_copy_images(project_to_compile, project_directories):
             file_path = os.path.join(dir_path, entry)
 
             if entry.lower().endswith('.png'):
-                image = Image.open(file_path)
+                try:
+                    image = Image.open(file_path)
 
-                if image.size == (16, 16):
-                    new_file_name = f"{directory}_{entry}"
-                    new_file_path = os.path.join(compiled_path, new_file_name)
+                    if image.size == (16, 16):
+                        new_file_name = f"{directory}_{entry}"
+                        new_file_path = os.path.join(compiled_path, new_file_name)
 
-                    resized_image = image.resize((Size, Size), resample=Image.NEAREST)
-                    resized_image = remove_transparency(resized_image)
-                    resized_image.save(new_file_path)
+                        resized_image = image.resize((Size, Size), resample=Image.NEAREST)
+                        resized_image = remove_transparency(resized_image)
+                        resized_image.save(new_file_path)
 
-                    tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
-                    tag_file_path = os.path.join(tags_path, tag_file_name)
-                    compiled_tags_file_name = f"{directory}_{tag_file_name}"
-                    compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
+                        tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
+                        tag_file_path = os.path.join(tags_path, tag_file_name)
+                        compiled_tags_file_name = f"{directory}_{tag_file_name}"
+                        compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
 
-                    if not os.path.exists(tag_file_path):
-                        create_tag_file(tag_file_path, os.path.splitext(entry)[0])
+                        if not os.path.exists(tag_file_path):
+                            create_tag_file(tag_file_path, os.path.splitext(entry)[0])
 
-                    copy_tag_file(tag_file_path, compiled_tags_file_path)
-                elif not is_tag_file(entry):
-                    try:
-                        os.remove(file_path)
-                    except:
-                        pass
-
+                        copy_tag_file(tag_file_path, compiled_tags_file_path)
+                    elif not is_tag_file(entry):
+                        try:
+                            os.remove(file_path)
+                        except:
+                            pass
+                except:
+                    pass
             elif not is_tag_file(entry):
                 try:
                     os.remove(file_path)
