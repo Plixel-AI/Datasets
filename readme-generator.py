@@ -12,8 +12,8 @@ def count_16x16_pngs(path):
                     with Image.open(os.path.join(root, file)) as img:
                         if img.size == (16, 16):
                             count += 1
-                except:
-                    print("Error")
+                except Exception as E:
+                    print(f"Error: {E}")
     return count
 def generate_table(directory):
     table = f"| {'Directory Name'} | {'Number of 16x16 PNGs'} |\n"

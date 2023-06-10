@@ -2,8 +2,8 @@
 
 | Directory Name | Number of 16x16 PNGs |
 | -------------- | ------------------- |
-| Temp Ignore | 231 |
-| Plixel Items - 2 | 2580 |
+| Temp Ignore | 0 |
+| Plixel Items - 2 | 3193 |
 | Plixel Items - 1 | 1180 |
 
 
