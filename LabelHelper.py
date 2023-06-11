@@ -5,8 +5,9 @@ from PIL import Image, ImageTk
 
 def list_directories():
     dirs = []
-    dirs.extend(['ITEMS/' + d for d in os.listdir('./ITEMS/') if os.path.isdir(os.path.join('./ITEMS/', d))])
-    dirs.extend(['BLOCKS/' + d for d in os.listdir('./BLOCKS/') if os.path.isdir(os.path.join('./BLOCKS/', d))])
+    dirs.extend(['./Types/ITEMS/' + d for d in os.listdir('./Types/ITEMS/') if os.path.isdir(os.path.join('./Types/ITEMS/', d))])
+    dirs.extend(['./Types/BLOCKS/' + d for d in os.listdir('./Types/BLOCKS/') if os.path.isdir(os.path.join('./Types/BLOCKS/', d))])
+    dirs.extend(['./Types/SCREENSHOTS/' + d for d in os.listdir('./Types/SCREENSHOTS/') if os.path.isdir(os.path.join('./Types/SCREENSHOTS/', d))])
     return dirs
 
 def find_all_images_and_tag_files(directory):

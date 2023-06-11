@@ -2,20 +2,22 @@ import os
 from PIL import Image
 
 #Defualt = 256
-Size=256
+SizeX=256
+SizeY=256
+
 
 def list_projects():
-    blocks_path = 'BLOCKS'
-    items_path = 'ITEMS'
+    blocks_path = './Types/BLOCKS'
+    items_path = './Types/ITEMS'
     
     projects = set()
     
-    for folder in os.listdir(blocks_path):
-        projects.add(os.path.join(blocks_path, folder))
-        
-    for folder in os.listdir(items_path):
-        projects.add(os.path.join(items_path, folder))
-        
+    for folder in os.listdir('./Types/'):
+        for folder2 in os.listdir("./Types/"+folder):
+            print(f"{folder} | {folder2}")
+            projects.add(os.path.join("./Types/"+folder, folder2))
+
+
     return projects
 
 def list_directories_in_project(project_path):
@@ -65,28 +67,23 @@ def resize_and_copy_images(project_to_compile, project_directories):
                 try:
                     image = Image.open(file_path)
 
-                    if image.size == (16, 16):
-                        new_file_name = f"{directory}_{entry}"
-                        new_file_path = os.path.join(compiled_path, new_file_name)
+                    new_file_name = f"{directory}_{entry}"
+                    new_file_path = os.path.join(compiled_path, new_file_name)
 
-                        resized_image = image.resize((Size, Size), resample=Image.NEAREST)
-                        resized_image = remove_transparency(resized_image)
-                        resized_image.save(new_file_path)
+                    resized_image = image.resize((SizeX, SizeY), resample=Image.NEAREST)
+                    resized_image = remove_transparency(resized_image)
+                    resized_image.save(new_file_path)
 
-                        tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
-                        tag_file_path = os.path.join(tags_path, tag_file_name)
-                        compiled_tags_file_name = f"{directory}_{tag_file_name}"
-                        compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
+                    tag_file_name = f"{os.path.splitext(entry)[0]}.txt"
+                    tag_file_path = os.path.join(tags_path, tag_file_name)
+                    compiled_tags_file_name = f"{directory}_{tag_file_name}"
+                    compiled_tags_file_path = os.path.join(compiled_path, compiled_tags_file_name)
 
-                        if not os.path.exists(tag_file_path):
-                            create_tag_file(tag_file_path, os.path.splitext(entry)[0])
+                    if not os.path.exists(tag_file_path):
+                        create_tag_file(tag_file_path, os.path.splitext(entry)[0])
 
-                        copy_tag_file(tag_file_path, compiled_tags_file_path)
-                    elif not is_tag_file(entry):
-                        try:
-                            os.remove(file_path)
-                        except:
-                            pass
+                    copy_tag_file(tag_file_path, compiled_tags_file_path)
+
                 except:
                     pass
             elif not is_tag_file(entry):
