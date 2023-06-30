@@ -1,1 +1,0 @@
-roof_tile_nether_bricks

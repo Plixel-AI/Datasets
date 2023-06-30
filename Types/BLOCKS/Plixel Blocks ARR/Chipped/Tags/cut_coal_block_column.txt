@@ -1,0 +1,1 @@
+cut coal block column

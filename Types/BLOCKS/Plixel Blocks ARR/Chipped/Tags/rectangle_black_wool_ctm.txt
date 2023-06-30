@@ -1,0 +1,1 @@
+rectangle black wool ctm

@@ -1,1 +1,0 @@
-respawn_obelisk_bottom_side

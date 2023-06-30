@@ -1,1 +1,0 @@
-nether_brick_wall_top_ew

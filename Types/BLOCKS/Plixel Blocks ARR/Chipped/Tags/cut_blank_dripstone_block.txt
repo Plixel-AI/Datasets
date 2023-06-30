@@ -1,0 +1,1 @@
+cut blank dripstone block
